@@ -13,7 +13,7 @@ program.parse();
 const options = program.opts();
 invokeAction(options);
 
-async function invokeAction({ action, id, name, email, phone }) {
+async function invokeAction({ action, id, ...data }) {
   switch (action) {
     case "list":
       const allContacts = await contactsServices.listContacts();
@@ -26,11 +26,7 @@ async function invokeAction({ action, id, name, email, phone }) {
       return contact;
 
     case "add":
-      const addedContact = await contactsServices.addContact(
-        name,
-        email,
-        phone
-      );
+      const addedContact = await contactsServices.addContact(data);
       console.log(addedContact);
       return addedContact;
 
@@ -39,8 +35,12 @@ async function invokeAction({ action, id, name, email, phone }) {
       console.log(deleteContact);
       return deleteContact;
 
+    case "update":
+      const updatedContact = await contactsServices.updateContact(id, data);
+      console.log(updatedContact);
+      return updatedContact;
+
     default:
       console.warn("\x1B[31m Unknown action type!");
   }
 }
-
